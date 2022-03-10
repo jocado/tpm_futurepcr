@@ -68,7 +68,7 @@ def parse_efi_device_path(buf):
     return DevicePath.parse(buf)
 
 def device_path_to_unix_path(path_vec):
-    dir_path = None
+    dir_path = ''
     unix_path = None
     for pp in path_vec:
         if pp.type == DevicePathType.MediaDevice:
