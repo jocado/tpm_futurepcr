@@ -25,6 +25,8 @@ def main():
                         help="substitute BOOT_SERVICES_APPLICATION path (syntax: <computed unix path>=<new unix path>)")
     parser.add_argument("--compare", action="store_true",
                         help="compare computed PCRs against live values")
+    parser.add_argument("--preferred", action="store_true",
+                        help="Only process log entries for specified PCRs")
     parser.add_argument("-v", "--verbose", action="store_true",
                         help="show verbose information about log parsing")
     parser.add_argument("--log-path",
@@ -71,6 +73,11 @@ def main():
 
     for event in enum_log_entries(args.log_path):
         idx = event["pcr_idx"]
+
+        if args.preferred:
+            if not idx in wanted_pcrs:
+                print('SKIPPING UNWANTED PCR: {}'.format(idx))
+                continue
 
         _verbose_pcr = (args.verbose and (verbose_all_pcrs or idx in wanted_pcrs))
         if _verbose_pcr:
